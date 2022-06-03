@@ -12,7 +12,7 @@ Main code is in main.py. You can edit it to make fit you purpose.
 There are 2 main functions (in main.py): make_archive() and open_archive()
 
 A little bit of documentation: 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 make_archive() has 4 arguments (2 only mandatory):
 
 -archive_name (required: str): Self-explanatory.
@@ -23,7 +23,7 @@ make_archive() has 4 arguments (2 only mandatory):
 
 -output_folder (not required, default: "."): output folder where archive will be stored.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 open_archive has 3 arguments (2 only mandatory):
 
 -archive_name (required: str): Seld-explanatory.
@@ -32,11 +32,12 @@ open_archive has 3 arguments (2 only mandatory):
 
 -password (not required, default: "password"): Password used for decryption.
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
 TODO section
 #TODO learn to write normal descriptions.
 
