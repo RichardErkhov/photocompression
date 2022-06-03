@@ -1,5 +1,6 @@
 # Some code for photo compression and archive encryption
 If you are using my code, please leave a link to my github.
+This code is mess, that's True, one day I will fix it! Thank you for understanding.
 This code is not working properly (probably), there are a lot of unused libraries, so I'm going to fix them soon.
 There is gui version (just run python gui.py).
 Main code is in main.py. You can edit it to make fit you purpose.
@@ -25,3 +26,5 @@ open_archive has 3 arguments (2 only mandatory):
 #TODO learn to write normal descriptions.
 #TODO count files in archive and output their name.
 #TODO view files without extracting archive
+#TODO clean the code
+#TODO compile it for windows
