@@ -50,7 +50,6 @@ class K_means:
       v = [float(p)/float(img.size[0]*img.size[1])*100  for p in np.histogram(np.asarray(img))[0]]
       if self.size :
         v += [osize[0], osize[1]]
-      #pbar.update(1)
       i = self.i
       self.i += 1
       return [i, v, im]
@@ -100,14 +99,6 @@ class K_means:
           self.cluster[x] = _mindist
           isover = False
 def sort(folder, k=3, size=False, resample=256, move=False):
-    #ap = argparse.ArgumentParser()
-    #ap.add_argument("-f", "--folder", required=True, help="path to image folder")
-    #ap.add_argument("-k", "--kmeans", type=int, default=5, help="how many groups")
-    #ap.add_argument("-r", "--resample", type=int, default=128, help="size to resample the image by")
-    #ap.add_argument("-s", "--size", default=False, action="store_true", help="use size to compare images")
-    #ap.add_argument("-m", "--move", default=False, action="store_true", help="move instead of copy")
-    
-    #args = vars(ap.parse_args())
     types = ('*.jpg', '*.JPG', '*.png', '*.jpeg')
     imagePaths = []
     folder = folder
@@ -123,13 +114,10 @@ def sort(folder, k=3, size=False, resample=256, move=False):
     if resample < 16 or resample > 256 :
         print("-r should be a value between 16 and 256")
         exit()
-    #pbar = tqdm(total=nimages)
     k = K_means(k,size,resample)
     k.generate_k_clusters(imagePaths)
     k.rearrange_clusters()
     return k
-    #for i in range(len(k.cluster)):
-     #   action(k.end[i], folder+"/out/"+str(k.cluster[i]+1).zfill(nfolders)+"/")
     
 def get_files(folder):
     files = []
@@ -162,7 +150,6 @@ def create_video(folder, files, video_name, output_folder='.', kmeans=False):
                     img = cv2.imread(filename)
                     f.write(os.path.split(filename)[-1] + "\n")
                     out.writeFrame(img[:,:,::-1])
-
         out.close()
     
 def create_archive(video_name, archive_name, output_folder='.'):
@@ -185,28 +172,21 @@ def decrypt_archive(archive_name, password='password'):
     bufferSize = 64 * 1024
     pyAesCrypt.decryptFile(archive_name + ".aes", archive_name, str(password), bufferSize)
 
-#in memory we need to decrypt archive
-#and read get files.txt without extracting it to drive
 def get_filesx(arhive_name, password='password'):
-    #decrypt archive
-    #use pyAesCrypt.decryptStream
     decypted_archive = io.BytesIO()
     with open(arhive_name, 'rb') as f:
         length = os.path.getsize(arhive_name)
         pyAesCrypt.decryptStream(f, decypted_archive, password, 64 * 1024, length)
     decypted_archive.seek(0)
-    #read files.txt
     with ZipFile(decypted_archive) as myzip:
         with myzip.open("files.txt") as f:
             files = f.read().decode().splitlines()
     return files
 
-    
 def unpack_archive(archive_name):
     with ZipFile(archive_name, 'r') as myzip:
         myzip.extractall()
     os.remove(archive_name)
-
 
 def extract_frames(video_name, folder):
     if folder.strip() == '' or folder.strip() == '.':
@@ -214,7 +194,6 @@ def extract_frames(video_name, folder):
     if not os.path.exists(folder):
         os.makedirs(folder)
     cap = cv2.VideoCapture(video_name)
-    
     with open("files.txt", mode='r') as f:
         for line in tqdm.tqdm(f, desc='extracting images'):
             line = line.strip()
@@ -253,7 +232,6 @@ def make_archive(archive_name: str, folder_name: str, password=None, output_fold
         nfolders = int(math.log(k_number, 10))+1
         folder_name = os.path.join(folder_name, "out")
         files = []
-
         #create video
         video_name = "video.avi"
         create_video(folder_name, k_sorted, video_name, output_folder=output_folder, kmeans=True)
