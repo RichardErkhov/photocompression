@@ -1,10 +1,6 @@
 #simplt gui for archiver
 import tkinter as tk
-import threading
-import time
 import main as archiver
-from tkinter import messagebox
-
 
 def interface():
     root = tk.Tk()
