@@ -1,11 +1,9 @@
 # Some code for photo compression and archive encryption
 If you are using my code, please leave a link to my github.
 
-This code is mess, that's True, one day I will fix it! Thank you for understanding.
+This code is not working properly (probably).
 
-This code is not working properly (probably), there are a lot of unused libraries, so I'm going to fix them soon.
-
-There is gui version (just run python gui.py).
+There is gui version (just run python gui.py) and cli version (just run python cli.py).
 
 Main code is in main.py. You can edit it to make fit you purpose.
 
@@ -48,10 +46,10 @@ TODO section
 
 #TODO view files without extracting archive
 
-#TODO clean the code
-
 #TODO remove opencv from there to lower compiled program's weight
 
 #TODO make it to work with different resolutions
 
 #TODO choose how loss works (now just lossless)
+
+#TODO add comments to code
