@@ -51,3 +51,5 @@ TODO section
 #TODO choose how loss works (now just lossless)
 
 #TODO add comments to code
+
+#TODO add different types of encryption
