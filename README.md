@@ -1,8 +1,6 @@
 # Some code for photo compression and archive encryption
 If you are using my code, please leave a link to my github.
 
-This code is not working properly (probably).
-
 There is gui version (just run python gui.py) and cli version (just run python cli.py).
 
 Main code is in main.py. You can edit it to make fit you purpose.
