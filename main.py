@@ -3,9 +3,9 @@ import os
 import shutil
 import subprocess
 import sys
-import time
-import zipfile
-import glob
+import time.sleep as sleep
+from zipfile import ZipFile
+from glob import glob
 import numpy as np
 import cv2
 from PIL import Image
@@ -119,7 +119,7 @@ def sort(folder, k=3, size=False, resample=256, move=False):
     if not folder.endswith("/") :
         folder+="/"
     for files in types :
-        imagePaths.extend(sorted(glob.glob(folder+files)))
+        imagePaths.extend(sorted(glob(folder+files)))
     nimages = len(imagePaths)
     nfolders = int(math.log(k, 10))+1
     if nimages <= 0 :
@@ -179,7 +179,7 @@ def create_video(folder, files, video_name, output_folder='.', kmeans=False):
 def create_archive(video_name, archive_name, output_folder='.'):
     if not archive_name.endswith(".zip"): 
         archive_name += ".zip"
-    with zipfile.ZipFile(os.path.join(output_folder, archive_name), 'w') as myzip:
+    with ZipFile(os.path.join(output_folder, archive_name), 'w') as myzip:
         myzip.write(os.path.join(output_folder, video_name))
         myzip.write(os.path.join(output_folder, "files.txt"))
 
@@ -207,7 +207,7 @@ def get_filesx(arhive_name, password='password'):
         pyAesCrypt.decryptStream(f, decypted_archive, password, 64 * 1024, length)
     decypted_archive.seek(0)
     #read files.txt
-    with zipfile.ZipFile(decypted_archive) as myzip:
+    with ZipFile(decypted_archive) as myzip:
         with myzip.open("files.txt") as f:
             files = f.read().decode().splitlines()
     return files
@@ -223,7 +223,7 @@ def get_random_frame(archive_name, password='password'):
         pyAesCrypt.decryptStream(f, decypted_archive, password, 64 * 1024, length)
     decypted_archive.seek(0)
     #read files.txt
-    with zipfile.ZipFile(decypted_archive) as myzip:
+    with ZipFile(decypted_archive) as myzip:
         with myzip.open("video.avi") as video:
             print(type(video.read()))
             #using imageio iterate over frames in the videio
@@ -249,7 +249,7 @@ def get_random_frame(archive_name, password='password'):
     return rand_file
     
 def unpack_archive(archive_name):
-    with zipfile.ZipFile(archive_name, 'r') as myzip:
+    with ZipFile(archive_name, 'r') as myzip:
         myzip.extractall()
     os.remove(archive_name)
 
@@ -272,7 +272,7 @@ def extract_frames(video_name, folder):
                 break 
     try: cap.release()
     except: pass
-    time.sleep(1)
+    sleep(1)
     os.remove(video_name)
     os.remove("files.txt")
 def make_archive(archive_name: str, folder_name: str, password=None, output_folder='.', kmeans=False, k_number=8):
