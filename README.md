@@ -51,3 +51,5 @@ TODO section
 #TODO clean the code
 
 #TODO not write kmeans into folder, just leave them in memory
+
+#TODO remove opencv from there to lower compiled program's weight
