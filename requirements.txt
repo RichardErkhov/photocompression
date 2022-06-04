@@ -4,4 +4,3 @@ pillow
 pyaescrypt
 scikit-video
 tqdm
-imageio

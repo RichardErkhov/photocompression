@@ -1,9 +1,5 @@
 #https://github.com/victorqribeiro/groupImg
 import os
-import shutil
-import subprocess
-import sys
-from time import sleep
 from zipfile import ZipFile
 from glob import glob
 import numpy as np
@@ -13,7 +9,6 @@ import pyAesCrypt
 import skvideo.io
 import tqdm
 import io
-import imageio
 import math
 import warnings
 from multiprocessing.dummy import Pool as ThreadPool
@@ -132,16 +127,9 @@ def sort(folder, k=3, size=False, resample=256, move=False):
     k = K_means(k,size,resample)
     k.generate_k_clusters(imagePaths)
     k.rearrange_clusters()
-    for i in range(k.k) :
-        try :
-            os.makedirs(folder+"out/"+str(i+1).zfill(nfolders))
-        except :
-            print("Folder already exists")
-    action = shutil.copy
-    if move :
-        action = shutil.move
-    for i in range(len(k.cluster)):
-        action(k.end[i], folder+"/out/"+str(k.cluster[i]+1).zfill(nfolders)+"/")
+    return k
+    #for i in range(len(k.cluster)):
+     #   action(k.end[i], folder+"/out/"+str(k.cluster[i]+1).zfill(nfolders)+"/")
     
 def get_files(folder):
     files = []
@@ -164,16 +152,17 @@ def create_video(folder, files, video_name, output_folder='.', kmeans=False):
                 f.write(filename + "\n")
                 out.writeFrame(img[:,:,::-1])
         else:
-            was = []
-            for i in os.listdir(folder):
-                if os.path.isdir(os.path.join(folder,i)):
-                    for filename in tqdm.tqdm(os.listdir(os.path.join(folder,i)), desc="compressing files"):
-                        if filename not in was:
-                            img = cv2.imread(os.path.join(folder,i,filename))
-                            f.write(filename + "\n")
-                            out.writeFrame(img[:,:,::-1])
-                            was.append(filename)
-        
+            sorts = []
+            for i in range(files.k):
+                sorts.append([])
+            for filename in range(len(files.end)):
+                sorts[files.cluster[filename]].append(files.end[filename])
+            for i in tqdm.tqdm(sorts, desc="compressing files"):
+                for filename in tqdm.tqdm(i, leave=False):
+                    img = cv2.imread(filename)
+                    f.write(os.path.split(filename)[-1] + "\n")
+                    out.writeFrame(img[:,:,::-1])
+
         out.close()
     
 def create_archive(video_name, archive_name, output_folder='.'):
@@ -212,41 +201,6 @@ def get_filesx(arhive_name, password='password'):
             files = f.read().decode().splitlines()
     return files
 
-#get random frame from video from aes archive
-#you can do the same that we did with files.txt
-def get_random_frame(archive_name, password='password'):
-    #decrypt archive
-    #use pyAesCrypt.decryptStream
-    decypted_archive = io.BytesIO()
-    with open(archive_name, 'rb') as f:
-        length = os.path.getsize(archive_name)
-        pyAesCrypt.decryptStream(f, decypted_archive, password, 64 * 1024, length)
-    decypted_archive.seek(0)
-    #read files.txt
-    with ZipFile(decypted_archive) as myzip:
-        with myzip.open("video.avi") as video:
-            print(type(video.read()))
-            #using imageio iterate over frames in the videio
-
-            for frame in imageio.get_reader(video.read(), 'ffmpeg'):
-                print(frame.shape)
-
-            #videogen = skvideo.io.vreader(video.read())
-            #e, img = cap.read()
-            #for frame in vid:
-            #    cv2.imshow("frame", frame)
-            #    cv2.waitKey(0)
-                #if e:
-                    #show images
-                    #cap.release()
-                    #cap.release()
-                    #return img
-                #else:
-                    #cap.release()
-                    #return None
-    #get random frame
-    rand_file = np.random.choice(files)
-    return rand_file
     
 def unpack_archive(archive_name):
     with ZipFile(archive_name, 'r') as myzip:
@@ -272,7 +226,6 @@ def extract_frames(video_name, folder):
                 break 
     try: cap.release()
     except: pass
-    sleep(1)
     os.remove(video_name)
     os.remove("files.txt")
 def make_archive(archive_name: str, folder_name: str, password=None, output_folder='.', kmeans=False, k_number=8):
@@ -296,15 +249,14 @@ def make_archive(archive_name: str, folder_name: str, password=None, output_fold
         os.remove(os.path.join(output_folder, video_name))
         os.remove(os.path.join(output_folder, "files.txt"))
     if kmeans == True:
-        sort(folder_name, k=k_number)
+        k_sorted = sort(folder_name, k=k_number)
         nfolders = int(math.log(k_number, 10))+1
         folder_name = os.path.join(folder_name, "out")
         files = []
-        for i in range(1,k_number+1):
-            files += get_files(os.path.join(folder_name, str(i).zfill(nfolders)))
+
         #create video
         video_name = "video.avi"
-        create_video(folder_name, files, video_name, output_folder=output_folder, kmeans=True)
+        create_video(folder_name, k_sorted, video_name, output_folder=output_folder, kmeans=True)
         #create archive
         create_archive(video_name, archive_name, output_folder=output_folder)
         #encrypt archive
@@ -315,7 +267,6 @@ def make_archive(archive_name: str, folder_name: str, password=None, output_fold
         #remove video
         os.remove(os.path.join(output_folder, video_name))
         os.remove(os.path.join(output_folder, "files.txt"))
-        #os.remove(os.path.join(folder_name))
 def open_archive(archive_name, folder_name, password=None):
     #decrypt archive
     if password is not None:
