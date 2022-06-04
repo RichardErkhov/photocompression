@@ -23,6 +23,9 @@ make_archive() has 4 arguments (2 only mandatory):
 
 -output_folder (not required, default: "."): output folder where archive will be stored.
 
+-kmeans (not required, default: False): use of Kmeans for better compression. Usually we don't use it because of high system resource usage.
+
+-K_number (not required, default: 8): number of classes if kmeans is used
 
 open_archive has 3 arguments (2 only mandatory):
 
@@ -47,5 +50,4 @@ TODO section
 
 #TODO clean the code
 
-#TODO compile it for windows
-
+#TODO not write kmeans into folder, just leave them in memory
