@@ -3,7 +3,7 @@ import os
 import shutil
 import subprocess
 import sys
-import time.sleep as sleep
+from time import sleep
 from zipfile import ZipFile
 from glob import glob
 import numpy as np
