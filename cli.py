@@ -3,8 +3,8 @@ import main as archiver
 def cli():
     print("Welcome to archiver!")
     while True:
-        print("Do you want to make an archive [1] or open an archive [2]?")
-        choice = input("Enter 1 or 2: ")
+        print("Do you want to make an archive [1], open an archive [2] or get files count [3]?")
+        choice = input("Enter 1, 2 or 3: ")
         if choice == "1":
             print("Make an archive")
             print("Enter the name of the archive: ")
@@ -31,6 +31,13 @@ def cli():
             print("Enter the password: ")
             password = input()
             archiver.open_archive(archive_name, output_folder, password)
+        elif choice == "3":
+            print("Get files count")
+            print("Enter the name of the archive: ")
+            archive_name = input()
+            print("Enter the password: ")
+            password = input()
+            print(f"file count: {archiver.get_files_count(archive_name, password)}")
         else:
             print("invalid input")
 
