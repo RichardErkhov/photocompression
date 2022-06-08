@@ -25,7 +25,7 @@ make_archive() has 4 arguments (2 only mandatory):
 
 open_archive has 3 arguments (2 only mandatory):
 
--archive_name (required: str): Seld-explanatory.
+-archive_name (required: str): Self-explanatory.
 
 -folder_name (required: str): where to output contents of archive.
 
