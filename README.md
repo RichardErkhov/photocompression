@@ -55,3 +55,5 @@ TODO section
 #TODO add different types of encryption
 
 #TODO check the difference between images and sort by least difference
+
+#TODO add tests
